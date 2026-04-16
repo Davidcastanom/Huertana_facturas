@@ -1,0 +1,356 @@
+<!--
+INSTRUCCIONES DE DESPLIEGUE EN GITHUB PAGES
+-------------------------------------------
+1. Crear un repositorio en GitHub (ejemplo: "pedidos-frutas").
+2. Subir estos tres archivos al repositorio (`index.html`, `style.css`, `script.js`).
+   Asegúrate de que el archivo principal se llame exactamente `index.html`.
+3. Ir a la pestaña "Settings" de tu repositorio.
+4. En el menú izquierdo, busca la sección "Pages" (GitHub Pages).
+5. En "Source", selecciona la rama "main" (o "master") y la carpeta "/ (root)".
+6. Haz clic en "Save".
+7. Después de un par de minutos, GitHub te proporcionará una URL (ej. https://tuusuario.github.io/pedidos-frutas/).
+8. Puedes acceder a esa URL directamente desde tu celular. ¡Listo!
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Pedidos WhatsApp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 15px; padding: 25px 15px;">
+
+        <!-- ============================================== -->
+        <!-- ESPACIO PARA EL LOGO DE TU EMPRESA             -->
+        <!-- ============================================== -->
+        <!-- INSTRUCCIONES:
+             1. Crea o guarda el logo de tu negocio en la misma carpeta donde está este archivo index.html.
+             2. El archivo idealmente debe llamarse "logo.png".
+             3. Medida recomendada: 150px de ancho y 150px de alto (Formato cuadrado transparente).
+             4. Borra los símbolos (<!--) y (-->) de la línea de abajo para activar la imagen:
+        -->
+        <!-- <img src="logo.png" alt="Logo de mi Empresa" style="width: 130px; height: 130px; object-fit: cover; border-radius: 50%; box-shadow: 0 6px 12px rgba(0,0,0,0.15); border: 3px solid white;"> -->
+
+        <div style="flex: 1;">
+            <!-- TÍTULO ALTAMENTE ESTILIZADO -->
+            <h1
+                style="margin: 0; font-size: 2.3rem; font-weight: 900; background: -webkit-linear-gradient(45deg, #FFF176, #A5D6A7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 5px rgba(0,0,0,0.3); letter-spacing: 1px;">
+                🥑 Gestor de Órdenes
+            </h1>
+            <p style="margin: 6px 0 0 0; font-size: 1rem; color: #E8F5E9; font-weight: 400;">Recepción inteligente de
+                WhatsApp</p>
+        </div>
+
+        <!-- BOTÓN RESPONSIVE (Ahora pasa abajo limpiamente sin superponerse a los textos en los celulares) -->
+        <button class="btn-small"
+            style="background-color: #fbc02d; font-weight: bold; border-radius: 20px; padding: 10px 20px; cursor:pointer; font-size: 0.95rem; color: #000; box-shadow: 0 4px 8px rgba(0,0,0,0.25); border: 2px solid #F57F17; letter-spacing: 0.5px;"
+            onclick="openProvidersModal()">
+            🏢 Ecosistema de Proveedores
+        </button>
+    </header>
+
+    <main>
+        <!-- SECCIÓN: CONFIGURACIÓN -->
+        <section class="card">
+            <h2>⚙️ Datos de la Empresa y Valores</h2>
+            <div class="config-grid"
+                style="grid-template-columns: 1fr 1fr 1fr; display: grid; gap: 15px; margin-bottom: 20px;">
+                <div class="input-group">
+                    <label>Nombre Empresa</label>
+                    <input type="text" id="company-name" value="Mi Frutería" placeholder="Ej. Frutas Don Pepe">
+                </div>
+                <div class="input-group">
+                    <label>NIT / RUT</label>
+                    <input type="text" id="company-nit" value="900.000.000-1">
+                </div>
+                <div class="input-group">
+                    <label>Teléfono Base</label>
+                    <input type="text" id="company-phone" value="+57 300 000 0000">
+                </div>
+            </div>
+
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+            <div class="config-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px;">
+                <div class="input-group">
+                    <label>Margen de Ganancia (%)</label>
+                    <input type="number" id="profit-margin" value="30" min="0">
+                </div>
+                <div class="input-group">
+                    <label>IVA de Impuestos (%)</label>
+                    <input type="number" id="tax-margin" value="19" min="0">
+                </div>
+            </div>
+
+            <div class="config-lists">
+                <!-- Costos Variables -->
+                <div class="cost-list">
+                    <h3>Costos Variables</h3>
+                    <div id="variable-costs-container"></div>
+                    <button class="btn btn-small" onclick="addCostRow('variable-costs-container')">+ Añadir
+                        Variable</button>
+                    <p class="help-text">Ej: Cajas, empaques individuales, etc.</p>
+                </div>
+
+                <!-- Costos Fijos -->
+                <div class="cost-list">
+                    <h3>Costos Fijos (por pedido)</h3>
+                    <div id="fixed-costs-container"></div>
+                    <button class="btn btn-small" onclick="addCostRow('fixed-costs-container')">+ Añadir Fijo</button>
+                    <p class="help-text">Ej: Domicilio general, mano de obra.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: INGRESO DEL PEDIDO -->
+        <section class="card">
+            <h2>📥 Ingreso del Pedido</h2>
+            <p>Pega aquí el pedido o usa el <b>MICRÓFONO</b> para dictarlo.</p>
+            <textarea id="whatsapp-input" rows="8"
+                placeholder="Ejemplo:&#10;aguacate 2kg&#10;1 kilo papas&#10;lulo 500gr"></textarea>
+            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                <button class="btn btn-secondary" id="mic-btn"
+                    style="background-color: #f57c00; margin-top: 0; flex: 1;" onclick="toggleVoiceInput()">🎙️ Dictar
+                    por Voz</button>
+                <button class="btn btn-primary" style="margin-top: 0; flex: 2;" onclick="processOrder()">⚙️ Procesar
+                    Pedido</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: REVISIÓN (TABLA INTERMEDIA) -->
+        <section class="card" id="review-section" style="display: none;">
+            <h2>📝 Revisión y Clasificación</h2>
+            <div class="table-responsive">
+                <table id="review-table">
+                    <thead>
+                        <tr>
+                            <th>Texto Original</th>
+                            <th>Producto (Detectado)</th>
+                            <th>Cant.</th>
+                            <th>Und.</th>
+                            <th>Precio Final/U</th>
+                            <th>Subtotal</th>
+                            <th>+ IVA</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="review-tbody">
+                        <!-- Las filas de items se inyectan acá -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="btn btn-secondary" style="background-color: #0288D1; margin-top: 0;"
+                    onclick="addManualItem()">➕ Añadir Ítem Manual</button>
+                <button class="btn btn-primary" style="margin-top: 0; flex: 2;" onclick="generateInvoice()">🧾 Generar
+                    Factura</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: FACTURA FINAL -->
+        <section class="card" id="invoice-section" style="display: none;">
+            <h2>✅ Factura Generada</h2>
+            <div class="invoice-container">
+                <textarea id="invoice-output" readonly rows="12"></textarea>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-success" style="margin-top: 0; flex: 2;" onclick="copyInvoice()">📋 Copiar
+                        Factura</button>
+                    <button class="btn btn-secondary" style="background-color: #546E7A; margin-top: 0; flex: 1;"
+                        onclick="exportToPDF()">📄 Guardar PDF</button>
+                </div>
+                <button class="btn btn-small" style="background-color: #d32f2f; color: white; margin-top: 5px;"
+                    onclick="resetOrder()">🔄 Iniciar Nuevo Pedido</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ÁREA DE IMPRESIÓN DEL PDF (Invisible en web, visible al imprimir) -->
+    <div id="print-area"></div>
+
+    <!-- === ECOSISTEMA: GESTIÓN DE PROVEEDORES (MODAL) === -->
+    <div id="providers-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin:0; font-size:1.3rem;">🏢 Ecosistema de Proveedores</h2>
+                <button class="btn-close" onclick="closeProvidersModal()">✖</button>
+            </div>
+
+            <div class="modal-tabs">
+                <button class="tab-btn active" onclick="switchProviderTab(1)">👥 Catálogo</button>
+                <button class="tab-btn" onclick="switchProviderTab(2)">⚖️ Cotizador</button>
+                <button class="tab-btn" onclick="switchProviderTab(3)">📈 Historial</button>
+            </div>
+
+            <!-- Pestaña 1: Catálogo y Mini-Inventarios de Proveedores -->
+            <div id="prov-tab-1" class="tab-content" style="display: block;">
+                <!-- VISTA: Lista de Proveedores -->
+                <div id="prov-list-view">
+                    <h3>Añadir Nuevo Proveedor</h3>
+                    <div style="display: flex; gap:10px; margin-bottom: 20px; flex-wrap:wrap;">
+                        <input type="text" id="new-prov-name" placeholder="Nombre completo del proveedor"
+                            style="flex:1; min-width: 200px;">
+                        <button class="btn btn-primary" style="margin: 0; width: auto; background-color: #455A64;"
+                            onclick="addProvider()">Añadir a Lista</button>
+                    </div>
+                    <h3>Directorio Actual Registrado</h3>
+                    <div class="table-responsive">
+                        <table class="prov-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre del Proveedor</th>
+                                    <th>Gestión / Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="providers-list-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VISTA: Mini Inventario Detallado (Oculta por defecto) -->
+                <div id="prov-inventory-view" style="display: none;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap:wrap; gap: 10px;">
+                        <h3 id="inv-provider-title" style="margin:0;">📦 Inventario: </h3>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <button class="btn btn-secondary" style="margin:0; width:auto; background-color: #4CAF50;"
+                                onclick="printProviderInventoryPDF()">📄 Imprimir Catálogo</button>
+                            <button class="btn btn-secondary" style="margin:0; width:auto; background-color: #78909C;"
+                                onclick="backToProvidersList()">⬅ Volver a la Lista</button>
+                        </div>
+                    </div>
+
+                    <p style="font-size:0.85rem; color:#666;">Añade nuevos productos a la oferta de este proveedor, o
+                        modifícalos si ha bajado/subido su precio.</p>
+
+                    <div
+                        style="display: flex; gap:10px; flex-wrap:wrap; margin-bottom: 15px; background:#ECEFF1; padding:15px; border-radius:8px; align-items:end;">
+                        <div style="flex:1; min-width:180px;">
+                            <label style="font-size:0.8rem;">Buscar Producto Interno:</label>
+                            <input type="text" id="inv-product-input" list="global-products-list"
+                                placeholder="Ej. Lulo...">
+                        </div>
+                        <div style="flex:1; min-width:120px;">
+                            <label style="font-size:0.8rem;">Actualizar el Precio:</label>
+                            <input type="number" id="inv-price-input" placeholder="$0" min="0">
+                        </div>
+                        <button class="btn btn-success" style="margin:0; width:auto;"
+                            onclick="saveInventoryQuote()">Cargar a Inventario</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="prov-table">
+                            <thead>
+                                <tr>
+                                    <th>Producto Agrícola</th>
+                                    <th>Precio Actual</th>
+                                    <th>Última Act.</th>
+                                    <th>Acción Rápida</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prov-inventory-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña 2: Cotizador y Comparador -->
+            <div id="prov-tab-2" class="tab-content" style="display: none;">
+                <h3>Comparador Físico de Costos</h3>
+                <p style="font-size:0.85rem; color:#666;">Selecciona o busca un producto de tu base agrícola primaria y
+                    registra a qué precio real te lo ofrece hoy un proveedor externo.</p>
+
+                <div class="config-grid"
+                    style="grid-template-columns: 2fr 1fr; display: grid; gap:15px; margin-top: 15px; margin-bottom:15px;">
+                    <div>
+                        <label>🌱 Producto Base a Cotizar:</label>
+                        <input type="text" id="quote-product-input" list="global-products-list"
+                            placeholder="Ej. Tomate Chonto..." onchange="loadProductQuotes()">
+                    </div>
+                    <div>
+                        <label>Tu Costo Oficial Actual:</label>
+                        <input type="text" id="quote-current-cost" disabled
+                            style="background:#f5f5f5; color:#d32f2f; font-weight:bold;">
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; gap:10px; flex-wrap:wrap; align-items:end; margin-bottom: 20px; background:#ECEFF1; padding:15px; border-radius:8px;">
+                    <div style="flex:1; min-width:180px;">
+                        <label style="font-size:0.8rem;">🏢 Buscar Proveedor Oferente:</label>
+                        <input type="text" id="quote-provider-input" list="global-providers-list"
+                            placeholder="Ej. Mayorista Sur...">
+                    </div>
+                    <div style="flex:1; min-width:120px;">
+                        <label style="font-size:0.8rem;">💰 Precio $ Cotizado:</label>
+                        <input type="number" id="quote-price" placeholder="$0" min="0">
+                    </div>
+                    <button class="btn btn-success" style="margin:0; width:auto; padding:10px;"
+                        onclick="saveQuote()">Cargar a Inventario del Proveedor</button>
+                </div>
+
+                <h3>📊 Tablero de Rivales Múltiples</h3>
+                <div class="table-responsive">
+                    <table class="prov-table" id="quotes-table">
+                        <thead>
+                            <tr>
+                                <th>El Proveedor</th>
+                                <th>Precio $ Postulado</th>
+                                <th>Análisis / Diferencia</th>
+                                <th>Asignación Inmediata</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quotes-tbody">
+                            <tr>
+                                <td colspan="4" style="text-align:center; color:#999;">Selecciona un producto agrícola
+                                    arriba para ver la competencia.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña 3: Trazabilidad / Historial Auditoría -->
+            <div id="prov-tab-3" class="tab-content" style="display: none;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap:wrap; gap: 10px;">
+                    <h3 style="margin:0;">Historial Legal y Trazabilidad</h3>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn btn-secondary" style="width:auto; margin:0; background-color: #d32f2f;"
+                            onclick="clearProvidersHistory()">🗑️ Reiniciar Mes</button>
+                        <button class="btn btn-secondary" style="width:auto; margin:0; background-color: #546E7A;"
+                            onclick="printProvidersHistoryPDF()">📄 PDF</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="prov-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha Auditoría</th>
+                                <th>El Producto Alterado</th>
+                                <th>Fijador Oficial</th>
+                                <th>Diferencia $ Acordada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-tbody">
+                            <tr>
+                                <td colspan="4" style="text-align:center; color:#999;">Sin historial de manipulaciones
+                                    contables al precio base.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
