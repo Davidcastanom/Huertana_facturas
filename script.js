@@ -306,9 +306,9 @@ function processOrder() {
                 <input type="text" id="prod-${index}" list="global-products-list" value="${initName}" style="width: 100%; padding: 5px;" placeholder="Escribe para buscar o añade..." onchange="onProductSelectChange(${index}); updateRow(${index})">
                 <span id="prov-badge-${index}"><div style="color: #0288D1; font-size: 0.75rem; margin-top: 4px;">🏢 <b>${pvName}</b></div></span>
             </td>
-            <td><input type="number" id="qty-${index}" value="${parsed.qty}" step="0.1" min="0.1" style="width: 70px" onchange="updateRow(${index})"></td>
-            <td><select id="unit-${index}" onchange="updateRow(${index})">${unitOptions}</select></td>
-            <td>$<input type="number" id="price-${index}" value="${Math.round(calcPrice)}" style="width: 90px" onchange="updateRow(${index})"></td>
+            <td><input type="number" id="qty-${index}" value="${parsed.qty}" step="0.1" min="0.1" style="width: 75px; padding: 5px;" onchange="updateRow(${index})"></td>
+            <td><select id="unit-${index}" onchange="updateRow(${index})" style="min-width: 95px; padding: 5px;">${unitOptions}</select></td>
+            <td>$<input type="number" id="price-${index}" value="${Math.round(calcPrice)}" style="width: 95px; padding: 5px;" onchange="updateRow(${index})"></td>
             <td id="sub-${index}">$${Math.round(calcPrice * parsed.qty * (parsed.unit === 'gr' ? 0.001 : 1))}</td>
             <td style="text-align:center;"><input type="checkbox" id="iva-${index}" style="transform:scale(1.2); cursor:pointer;"></td>
             <td><button class="btn-remove" onclick="removeRow(${index}, this)">🗑️</button></td>
@@ -626,9 +626,9 @@ function addManualItem() {
             <input type="text" id="prod-${index}" list="global-products-list" value="" style="width: 100%; padding: 5px;" placeholder="Escribe para buscar o añade..." onchange="onProductSelectChange(${index}); updateRow(${index})">
             <span id="prov-badge-${index}"><div style="color: #0288D1; font-size: 0.75rem; margin-top: 4px;">🏢 Desconocido</div></span>
         </td>
-        <td><input type="number" id="qty-${index}" value="1" step="0.1" min="0.1" style="width: 70px" onchange="updateRow(${index})"></td>
-        <td><select id="unit-${index}" onchange="updateRow(${index})">${unitOptions}</select></td>
-        <td>$<input type="number" id="price-${index}" value="0" style="width: 90px" onchange="updateRow(${index})"></td>
+        <td><input type="number" id="qty-${index}" value="1" step="0.1" min="0.1" style="width: 75px; padding: 5px;" onchange="updateRow(${index})"></td>
+        <td><select id="unit-${index}" onchange="updateRow(${index})" style="min-width: 95px; padding: 5px;">${unitOptions}</select></td>
+        <td>$<input type="number" id="price-${index}" value="0" style="width: 95px; padding: 5px;" onchange="updateRow(${index})"></td>
         <td id="sub-${index}">$0</td>
         <td style="text-align:center;"><input type="checkbox" id="iva-${index}" style="transform:scale(1.2); cursor:pointer;"></td>
         <td><button class="btn-remove" onclick="removeRow(${index}, this)">🗑️</button></td>
@@ -1149,9 +1149,9 @@ function addToCrossCart(productName, quotedCostPrice, unit) {
         <td>
             <input type="text" id="prod-${index}" list="global-products-list" value="${productName}" style="width: 100%; padding: 5px;" onchange="onProductSelectChange(${index}); updateRow(${index})">
         </td>
-        <td><input type="number" id="qty-${index}" value="1" step="0.1" min="0.1" style="width: 70px" onchange="updateRow(${index})"></td>
-        <td><select id="unit-${index}" onchange="updateRow(${index})">${unitOptions}</select></td>
-        <td>$<input type="number" id="price-${index}" value="${sellPrice}" style="width: 90px" onchange="updateRow(${index})"></td>
+        <td><input type="number" id="qty-${index}" value="1" step="0.1" min="0.1" style="width: 75px; padding: 5px;" onchange="updateRow(${index})"></td>
+        <td><select id="unit-${index}" onchange="updateRow(${index})" style="min-width: 95px; padding: 5px;">${unitOptions}</select></td>
+        <td>$<input type="number" id="price-${index}" value="${sellPrice}" style="width: 95px; padding: 5px;" onchange="updateRow(${index})"></td>
         <td id="sub-${index}">$${sellPrice}</td>
         <td style="text-align:center;"><input type="checkbox" id="iva-${index}" style="transform:scale(1.2); cursor:pointer;"></td>
         <td><button class="btn-remove" onclick="removeRow(${index}, this)">🗑️</button></td>
